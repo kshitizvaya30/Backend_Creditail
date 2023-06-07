@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { getAllInvoices,  updateInvoicePrice} from "./database.js";
+import { getAllInvoices,  updateInvoicePrice, insertInvoice} from "./database.js";
 import cors from "cors";
 import dotenv from "dotenv";
 
@@ -51,27 +51,21 @@ app.put("/api/updatePendingAmount", async (req, res) => {
   }
 });
 
-app.post('/api/addInvoices', async (req, res) => {
+app.post("/api/invoices", async (req, res) => {
   try {
-    const { amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id } = req.body;
+    const invoiceData = req.body;
+    const invoiceId = await insertInvoice(invoiceData);
 
-    // Perform any necessary validation or data transformation here
-
-    const query = `
-      INSERT INTO Invoice (amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-    const values = [amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id];
-
-    await pool.query(query, values);
-    
-    res.sendStatus(200);
+    if (invoiceId) {
+      res.status(200).json({ message: "Invoice inserted successfully", invoiceId });
+    } else {
+      res.status(400).json({ message: "Error occurred while inserting the invoice" });
+    }
   } catch (error) {
-    console.error('Error inserting invoice:', error);
-    res.sendStatus(500);
+    console.error("Error inserting invoice:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
-
 
 
 //Server Settings

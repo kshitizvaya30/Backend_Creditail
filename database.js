@@ -44,3 +44,22 @@ export async function updateInvoicePrice(invoiceId, newPrice) {
   }
 }
 
+
+async function insertInvoice(invoiceData) {
+  try {
+    const { Brand, SalesRepId, SalesmanName, InvoiceAmount, RetailerId, RetailerName, RetailerPhno, InvoiceDate, BillNo, PendingAmount, CollectionDate } = invoiceData;
+
+    const query = "INSERT INTO Invoice (Brand, SalesRepId, SalesmanName, InvoiceAmount, RetailerId, RetailerName, RetailerPhno, InvoiceDate, BillNo, PendingAmount, CollectionDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    const values = [Brand, SalesRepId, SalesmanName, InvoiceAmount, RetailerId, RetailerName, RetailerPhno, InvoiceDate, BillNo, PendingAmount, CollectionDate];
+
+    const result = await pool.query(query, values);
+    if (result && result.affectedRows === 1) {
+      return result.insertId;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error("Error inserting invoice:", error);
+    throw error;
+  }
+}
