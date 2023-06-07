@@ -17,6 +17,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+app.get("/api/check", async (req, res) => {
+  try{
+  res.status(200).send("API Working");
+  }catch {
+    res.status(404).json({ error: "Something Went Wrong" });
+  }
+});
+
 app.get("/api/getCustomers", async (req, res) => {
   const items = await getAllInvoices();
   // console.log(items);
