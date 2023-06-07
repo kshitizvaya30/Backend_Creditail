@@ -51,6 +51,28 @@ app.put("/api/updatePendingAmount", async (req, res) => {
   }
 });
 
+app.post('/api/addInvoices', async (req, res) => {
+  try {
+    const { amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id } = req.body;
+
+    // Perform any necessary validation or data transformation here
+
+    const query = `
+      INSERT INTO Invoice (amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [amount, invoice_date, bill_no, pending_amount, collection_date, retailer_id, brand_id, sales_rep_id];
+
+    await pool.query(query, values);
+    
+    res.sendStatus(200);
+  } catch (error) {
+    console.error('Error inserting invoice:', error);
+    res.sendStatus(500);
+  }
+});
+
+
 
 //Server Settings
 app.use((err, req, res, next) => {
