@@ -45,7 +45,7 @@ export async function updateInvoicePrice(invoiceId, newPrice) {
 }
 
 
-async function insertInvoice(invoiceData) {
+export async function insertInvoice(invoiceData) {
   try {
     const { Brand, SalesRepId, SalesmanName, InvoiceAmount, RetailerId, RetailerName, RetailerPhno, InvoiceDate, BillNo, PendingAmount, CollectionDate } = invoiceData;
 
